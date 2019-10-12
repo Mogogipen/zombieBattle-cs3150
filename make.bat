@@ -1,0 +1,1 @@
+g++ -o "Zombie Battle.exe" *.cpp *.h

@@ -1,15 +1,17 @@
 #include <iostream>
+#include <string>
+#include "func.h"
+#include "const.h"
 
 using namespace std;
 
-
-//Declare a const global variable to point "stunned" zombies at
-
-//1. accept as command line inputs: number of rooms, max number of zombies, and zombie 
-//regeneration rate
+//*****This is a zombie killing game! (main cpp file)*****\\
 
 int main()
 {
+
+//1. accept as command line inputs: number of rooms, max number of zombies, and zombie 
+//regeneration rate
 
 //2. Gather command line input and verify they entered enough arguments and that there are 
 //more rooms than zombies
@@ -52,14 +54,6 @@ int main()
 
 //15. Report success
 
+
+	return 0;
 }
-
-
-//function for zombie placement in rooms
-
-//function for displaying field
-
-//function for counting active zombies
-
-
-
