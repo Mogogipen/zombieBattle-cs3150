@@ -7,6 +7,6 @@ using namespace std;
 #ifndef CONSTANTS
 #define CONSTANTS
 
-extern const String stunnedZombiesLocation;
+extern const string stunnedZombiesLocation;
 
 #endif

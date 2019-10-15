@@ -7,17 +7,41 @@ using namespace std;
 
 //*****This is a zombie killing game! (main cpp file)*****\\
 
-int main()
-{
+int main() {
 
 //1. accept as command line inputs: number of rooms, max number of zombies, and zombie 
 //regeneration rate
 
+	cout << "Welcome to Zombie Splatter!!" << endl;
+
+	int rooms;
+	int zombies;
+	int regeneration;
+
+	gatherIn:
+	cout << "How many rooms are there in the building? ";
+	cin >> rooms;
+	cout << "How many zombies are in the building? (If there's already more zombies than rooms, you're dead.) ";
+	cin >> zombies;
+	cout << "What are the chances that the zombie will regenerate (as a percentage)? ";
+	cin >> regeneration;
+
 //2. Gather command line input and verify they entered enough arguments and that there are 
 //more rooms than zombies
 
+	if (!isValidInteger(rooms) || !isValidInteger(zombies) || regeneration > 100 || regeneration <= 0) {
+		cout << "That is not valid input\n" << endl;
+		goto gatherIn;
+	}
+	if (zombies > rooms) {
+		cout << "Sorry, you inevitably die.\nGame Over" << endl;
+		return 0;
+	}
+
 //3. Create a dynamic character area to represent the rooms and initialize the area to 
 //all 'E's
+
+	string building[rooms];
 
 //4. Create an array of char pointers to represent the zombies. Array will be the max 
 //number of zombies

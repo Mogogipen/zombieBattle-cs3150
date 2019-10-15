@@ -9,4 +9,7 @@ using namespace std;
 //displayField();
 //countActiveZombies();
 
+//Other functions
+bool isValidInteger(int);
+
 #endif
