@@ -5,11 +5,13 @@ using namespace std;
 #ifndef FUNCTIONS
 #define FUNCTIONS
 
+//Required functions
 //placeZombieInRoom();
 //displayField();
 //countActiveZombies();
 
 //Other functions
 bool isValidInteger(int);
+int power(int, int);
 
 #endif

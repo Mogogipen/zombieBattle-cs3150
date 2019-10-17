@@ -1,5 +1,3 @@
-#include <string>
-
 using namespace std;
 
 //*****Constants header file for zombieBattle*****\\
@@ -7,6 +5,6 @@ using namespace std;
 #ifndef CONSTANTS
 #define CONSTANTS
 
-extern const string stunnedZombiesLocation;
+extern const char stunnedZombiesLocation = ' ';
 
 #endif
