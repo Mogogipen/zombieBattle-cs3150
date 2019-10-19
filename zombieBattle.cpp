@@ -3,16 +3,18 @@
 #include <cstdlib>	//For rand function
 #include <ctime>	//For time, used for srand() (seed generation)
 #include "func.h"
-#include "const.h"
 
 using namespace std;
 
 //*****This is a zombie killing game! (main cpp file)*****\\
 
+char c = ' ';
+char* const stunnedZombiesLocation = &c;
+
 int main() {
 
-//1. accept as command line inputs: number of rooms, max number of zombies, and zombie 
-//regeneration rate
+	//1. accept as command line inputs: number of rooms, max number of zombies, and zombie 
+	//regeneration rate
 
 	cout << "Welcome to Zombie Splatter!!" << endl;
 
@@ -28,11 +30,13 @@ int main() {
 	cout << "What are the chances that the zombie will regenerate (as a percentage)? ";
 	cin >> regeneration;
 
-//2. Gather command line input and verify they entered enough arguments and that there are 
-//more rooms than zombies
+	//2. Gather command line input and verify they entered enough arguments and that there are 
+	//more rooms than zombies
 
 	if (!isValidInteger(roomCount) || !isValidInteger(zombieCount) || regeneration > 100 || regeneration <= 0) {
 		cout << "That is not valid input\n" << endl;
+		cin.clear();
+		cin.ignore(10, '\n');
 		goto gatherInput;
 	}
 	if (zombieCount > roomCount) {
@@ -40,40 +44,43 @@ int main() {
 		return 0;
 	}
 
-//3. Create a dynamic character area to represent the rooms and initialize the area to 
-//all 'E's
+	//3. Create a dynamic character area to represent the rooms and initialize the area to 
+	//all 'E's
 
 	char* rooms = new char[roomCount];
 	for (int i = 0; i < roomCount; i++) {
 		rooms[i] = 'E';
 	}
 
-//4. Create an array of char pointers to represent the zombies. Array will be the max 
-//number of zombies
+	//4. Create an array of char pointers to represent the zombies. Array will be the max 
+	//number of zombies
 
 	char* zombies[zombieCount];
 
-//5. Randomly point zombies at rooms array. When a zombie points at a room space change 
-//the letter in the array to Z. Remember, because we are using pointers you can have more than one
-//zombie in a room.
+	//5. Randomly point zombies at rooms array. When a zombie points at a room space change 
+	//the letter in the array to Z. Remember, because we are using pointers you can have more than one
+	//zombie in a room.
 
 	srand(time(NULL));
 	for (int i = 0; i < zombieCount; i++) {
 		int roomIndex = rand() % roomCount;
-		zombies[i] = &rooms[roomIndex];
-		rooms[roomIndex] = 'Z';
+		placeZombieInRoom(zombies[i], rooms, roomIndex);
 	}
 
-//6. Start game loop
+	//6. Start game loop
 
 	int loopCounter = 100; //If it reaches zero, it's game over, the player loses.
 	bool play = true;
+	bool win = false;
+	int bullets = 25;
 	while (play) {
 
-//7. Display rooms as '*' place numbers underneath so the user can easily see where they 
-//can shoot. Ex
-//* * * * * * *
-//1 2 3 4 5 6 7
+		cout << "You have " << bullets << " bullets left!" << endl;
+
+		//7. Display rooms as '*' place numbers underneath so the user can easily see where they 
+		//can shoot. Ex
+		//* * * * * * *
+		//1 2 3 4 5 6 7
 
 		for (int i = 0; i < roomCount; i++) {
 			//Place astrisks in-line with room numbers;
@@ -92,56 +99,80 @@ int main() {
 		}
 		cout << endl;
 
-//8. Prompt user to pick a room to "shoot" in. 
+		//8. Prompt user to pick a room to "shoot" in. 
 
-		getRoomToShootAt:
-		cout << "Which room would you like to shoot at? (1-" << roomCount << ")" << endl;
 		int shootAt;
+		getRoomToShootAt:
+		cout << "Which room would you like to shoot at?";
 		cin >> shootAt;
 		if (shootAt < 1 || shootAt > roomCount) {
 			cout << "invalid" << endl;
+			cin.clear();
+			cin.ignore(10, '\n');
 			goto getRoomToShootAt;
 		}
+		shootAt--;
+		bullets--;
 
 
-//9. Reveal the current zombie distribution. Example: E E Z E E Z Z E E. 
+		//9. Reveal the current zombie distribution. Example: E E Z E E Z Z E E. 
 
-		//displayField();
+		displayField(rooms, roomCount, zombies, zombieCount);
 
-//10.  Check to see if and how many zombies pointed at that room. Point all zombies that 
-//were in that room to the "stunned" constant. 
+		//10.  Check to see if and how many zombies pointed at that room. Point all zombies that 
+		//were in that room to the "stunned" constant.
 
-//11. Report zombies left and change all rooms to 'E.'
-
-		//cout << "There are " << countActiveZombies() << " zombies left unstunned." << endl;
-
-//12. Cycle through the zombie pointer array. Point each zombie at a new random location 
-//unless it is stunned. For each stunned zombie offer a chance of regeneration based on 
-//the regeneration rate. For example, 3 would indicate a 3% chance it would regenerate. 
-//(You can do this by selecting a random number from 1 to 100.)
-
-//13. If all zombies are stunned, terminate loop
-		
+		cout << &stunnedZombiesLocation;
 		for (int i = 0; i < zombieCount; i++) {
-			if (zombies[i] == &stunnedZombiesLocation) {
+			// cout << (zombies[i] == &rooms[shootAt]) << zombies[i] << &rooms[shootAt] << endl;
+			cout << *zombies[i] << " " << rooms[i] << ", ";
+			if (zombies[i] == &rooms[shootAt]) {
+				zombies[i] = stunnedZombiesLocation;
+				cout << stunnedZombiesLocation;
+			}
+		}
+		cout << "\n" << endl;
+
+		//11. Report zombies left and change all rooms to 'E.'
+
+		cout << "There are " << countActiveZombies(zombies, zombieCount, stunnedZombiesLocation) << " zombies left unstunned." << endl;
+
+		//12. Cycle through the zombie pointer array. Point each zombie at a new random location 
+		//unless it is stunned. For each stunned zombie offer a chance of regeneration based on 
+		//the regeneration rate. For example, 3 would indicate a 3% chance it would regenerate. 
+		//(You can do this by selecting a random number from 1 to 100.)
+
+		//13. If all zombies are stunned, terminate loop
+		
+		if (bullets <= 0) {
+			play = false;
+			win = false;
+		}
+
+		for (int i = 0; i < zombieCount; i++) {
+			if (zombies[i] == stunnedZombiesLocation) {
 				if (i = zombieCount-1) {
 					play = false;
-					// win = true;
+					win = true;
 				}
 				continue;
 			}
 			break;
 		}
 
-//14. End game loop
-
-		//Temp. end loop
-		play = false;
+	//14. End game loop
 
 	}
 
-//15. Report success
+	//15. Report success
 
+	string winMessage = "You won! Congratulation!";	
+	string loseMessage = "Game Over";
+
+	if (win)
+		cout << winMessage;
+	else
+		cout << loseMessage;
 
 	return 0;
 }
