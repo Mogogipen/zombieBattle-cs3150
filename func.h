@@ -6,11 +6,12 @@ using namespace std;
 #define FUNCTIONS
 
 //Required functions
-void placeZombieInRoom(char*, char*, int);
+char* placeZombieInRoom(char*, char*, int);
 void displayField(char*, int, char**, int);
 int countActiveZombies(char**, int, char*);
 
 //Other functions
+void randomizeZombies(char**, char*, int, int, int, char*);
 bool isValidInteger(int);
 int power(int, int);
 

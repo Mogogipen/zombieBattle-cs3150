@@ -62,9 +62,10 @@ int main() {
 	//zombie in a room.
 
 	srand(time(NULL));
+	randomizeZombies(zombies, rooms, zombieCount, roomCount, regeneration, stunnedZombiesLocation);
+
 	for (int i = 0; i < zombieCount; i++) {
-		int roomIndex = rand() % roomCount;
-		placeZombieInRoom(zombies[i], rooms, roomIndex);
+		cout << rooms[i] << endl;
 	}
 
 	//6. Start game loop
@@ -73,7 +74,10 @@ int main() {
 	bool play = true;
 	bool win = false;
 	int bullets = 25;
+	int activeZombies;
 	while (play) {
+
+		//Tell the player how many bullets they have left
 
 		cout << "You have " << bullets << " bullets left!" << endl;
 
@@ -122,25 +126,28 @@ int main() {
 		//10.  Check to see if and how many zombies pointed at that room. Point all zombies that 
 		//were in that room to the "stunned" constant.
 
-		cout << &stunnedZombiesLocation;
 		for (int i = 0; i < zombieCount; i++) {
-			// cout << (zombies[i] == &rooms[shootAt]) << zombies[i] << &rooms[shootAt] << endl;
-			cout << *zombies[i] << " " << rooms[i] << ", ";
 			if (zombies[i] == &rooms[shootAt]) {
 				zombies[i] = stunnedZombiesLocation;
-				cout << stunnedZombiesLocation;
 			}
 		}
 		cout << "\n" << endl;
 
 		//11. Report zombies left and change all rooms to 'E.'
 
-		cout << "There are " << countActiveZombies(zombies, zombieCount, stunnedZombiesLocation) << " zombies left unstunned." << endl;
+		activeZombies = countActiveZombies(zombies, zombieCount, stunnedZombiesLocation);
+		if (activeZombies == 1) {
+			cout << "There is only 1 zombie left unstunned." << endl;
+		} else {
+			cout << "There are " << activeZombies << " zombies left unstunned." << endl;
+		}
 
 		//12. Cycle through the zombie pointer array. Point each zombie at a new random location 
 		//unless it is stunned. For each stunned zombie offer a chance of regeneration based on 
 		//the regeneration rate. For example, 3 would indicate a 3% chance it would regenerate. 
 		//(You can do this by selecting a random number from 1 to 100.)
+
+		randomizeZombies(zombies, rooms, zombieCount, roomCount, regeneration, stunnedZombiesLocation);
 
 		//13. If all zombies are stunned, terminate loop
 		
@@ -150,14 +157,10 @@ int main() {
 		}
 
 		for (int i = 0; i < zombieCount; i++) {
-			if (zombies[i] == stunnedZombiesLocation) {
-				if (i = zombieCount-1) {
-					play = false;
-					win = true;
-				}
-				continue;
+			if (countActiveZombies(zombies, zombieCount, stunnedZombiesLocation) == 0) {
+				win = true;
+				play = false;
 			}
-			break;
 		}
 
 	//14. End game loop
