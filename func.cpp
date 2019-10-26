@@ -67,3 +67,10 @@ int power(int base, int power) {
 	}
 	return result;
 }
+
+void clrScrn() {
+	for (int i = 0; i < 75; i++) {
+		cout << '\n';
+	}
+	cout << endl;
+}

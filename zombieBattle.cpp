@@ -15,6 +15,8 @@ int main() {
 
 	//Welcome the player
 
+	start:
+
 	cout << "Welcome to Zombie Splatter!!" << endl;
 	cout << "You're trapped in a building with zombies!\nIf you run out of bullets you're going to die!\n" << endl;
 
@@ -109,11 +111,14 @@ int main() {
 		shootAt--;
 		bullets--;
 
+		//"clear" the screen
+		clrScrn();
 
 		//Display the current zombie distribution in this format:
 		//E E Z E Z
 		//1 2 3 4 5 
 		displayField(rooms, roomCount, zombies, zombieCount);
+		cout << endl;
 
 		//Stun all zombies in the room the player shot at (point them to an outside location)
 		for (int i = 0; i < zombieCount; i++) {
@@ -121,7 +126,6 @@ int main() {
 				zombies[i] = stunnedZombiesLocation;
 			}
 		}
-		cout << "\n" << endl;
 
 		//Count the active zombies left, and tell the player
 		activeZombies = countActiveZombies(zombies, zombieCount, stunnedZombiesLocation);
@@ -152,6 +156,25 @@ int main() {
 		cout << winMessage;
 	else
 		cout << loseMessage;
+
+	//Ask to play again and clear screen if so
+	cout << endl;	//Whitespace
+
+	string again;
+	playAgain:
+	cout << "Do you want to play again?(y/n)";
+	cin >> again;
+	if (again.compare("y") == 0) {
+		clrScrn();
+		goto start;
+	} else if (again.compare("n") == 0) {
+		return 0;
+	} else {
+		cout << "That is not valid input\n" << endl;
+		cin.clear();
+		cin.ignore(10, '\n');
+		goto playAgain;
+	}
 
 	return 0;
 }

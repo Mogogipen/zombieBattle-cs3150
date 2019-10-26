@@ -14,5 +14,6 @@ int countActiveZombies(char**, int, char*);
 void randomizeZombies(char**, char*, int, int, int, char*);
 bool isValidInteger(int);
 int power(int, int);
+void clrScrn();
 
 #endif
